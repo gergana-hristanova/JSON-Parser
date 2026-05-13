@@ -18,6 +18,6 @@ int main()
     ObjectStatement os = ObjectStatement();
     os.add(kvp1).add(kvp2).add(kvp3);
 
-    std::cout << "hi";
     os.print(std::cout);
+    return 0;
 }

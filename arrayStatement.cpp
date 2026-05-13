@@ -23,7 +23,7 @@ Statement* ArrayStatement::copy() const
 
 void ArrayStatement::print(std::ostream& os) const
 {
-    os << "[";
+    os << "[ ";
     for (size_t i = 0; i < array.size(); ++i)
     {
         if (i > 0)
@@ -34,7 +34,7 @@ void ArrayStatement::print(std::ostream& os) const
         array[i]->print(os);
     }
     
-    os << "]";
+    os << " ]";
 }
 
 ArrayStatement::~ArrayStatement()

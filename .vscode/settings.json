@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^g\\+\\+ -std=c\\+\\+20 -Wall -Wextra -fsanitize=address \\*\\.cpp -o main && \\./main$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
