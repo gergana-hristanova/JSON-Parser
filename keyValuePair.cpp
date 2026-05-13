@@ -5,7 +5,9 @@
 
 KeyValuePair::KeyValuePair(StringStatement key, Statement* val)
     : key(key), value(val->copy())
-{}
+{
+    delete val;
+}
 
 KeyValuePair::KeyValuePair(const KeyValuePair& other)
     : key(other.key), value(other.value->copy())
@@ -22,6 +24,7 @@ KeyValuePair& KeyValuePair::operator=(KeyValuePair other)
 std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp)
 {
     kvp.key.print(os);
+    os << ": ";
     kvp.value->print(os);
     return os;
 }

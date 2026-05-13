@@ -14,10 +14,6 @@ int main()
     std::ifstream sourceFile("test.json");
     std::ofstream destFile("dest.json");
 
-    KeyValuePair kvp = KeyValuePair(StringStatement("name"), new StringStatement("Joan"));
-
-    destFile << kvp;
-
     sourceFile.close();
     destFile.close();
 }
