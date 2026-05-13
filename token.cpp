@@ -25,6 +25,5 @@ struct Token
     {
         char symbol;
         double number;
-        std::string text;
     } data;
 };
