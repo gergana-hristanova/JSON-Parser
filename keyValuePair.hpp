@@ -8,13 +8,14 @@
 class KeyValuePair
 {
 public:
+    friend std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp);
     KeyValuePair(StringStatement key, Statement* value);
 
     KeyValuePair(const KeyValuePair& other);
 
     KeyValuePair& operator=(KeyValuePair other);
 
-    friend std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp);
+    void print(std::ostream& os);
 
     ~KeyValuePair();
 

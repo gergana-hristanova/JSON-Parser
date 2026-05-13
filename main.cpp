@@ -7,14 +7,17 @@
 #include "boolStatement.hpp"
 #include "nullStatement.hpp"
 #include "arrayStatement.hpp"
+#include "objectStatement.hpp"
 #include "keyValuePair.hpp"
 
 int main()
 {
-    ArrayStatement as = ArrayStatement();
-    as.add(new StringStatement("hello"));
-    as.add(new BoolStatement("false"));
-    as.add(new NullStatement());
+    KeyValuePair kvp1 = KeyValuePair(StringStatement("name:"), new NullStatement());
+    KeyValuePair kvp2 = KeyValuePair(StringStatement("age:"), new NumberStatement(15));
+    KeyValuePair kvp3 = KeyValuePair(StringStatement("id:"), new StringStatement("A800"));
+    ObjectStatement os = ObjectStatement();
+    os.add(kvp1).add(kvp2).add(kvp3);
 
-    as.print(std::cout);
+    std::cout << "hi";
+    os.print(std::cout);
 }

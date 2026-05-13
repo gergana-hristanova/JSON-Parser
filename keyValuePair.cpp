@@ -29,6 +29,11 @@ std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp)
     return os;
 }
 
+void KeyValuePair::print(std::ostream& os)
+{
+    os << *this;
+}
+
 KeyValuePair::~KeyValuePair()
 {
     delete value;
