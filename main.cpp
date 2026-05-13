@@ -4,6 +4,9 @@
 #include "statement.cpp"
 #include "numberStatement.cpp"
 #include "stringStatement.cpp"
+#include "boolStatement.hpp"
+#include "nullStatement.hpp"
+#include "arrayStatement.hpp"
 
 #include "utils.cpp"
 
@@ -12,9 +15,9 @@ int main()
     std::ifstream sourceFile("test.json");
     std::ofstream destFile("dest.json");
 
-    StringStatement ss = StringStatement("Helo world");
+    KeyValuePair kvp = KeyValuePair(StringStatement("name"), new StringStatement("Joan"));
 
-    destFile << ss;
+    destFile << kvp;
 
     sourceFile.close();
     destFile.close();
