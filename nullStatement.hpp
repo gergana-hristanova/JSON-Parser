@@ -9,5 +9,5 @@ public:
 
     Statement* copy() const override;
 
-    friend std::ostream& operator<<(std::ostream& os, const NullStatement& ns);
+    void print(std::ostream& os) const override;
 };

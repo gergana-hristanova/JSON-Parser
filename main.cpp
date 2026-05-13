@@ -1,14 +1,13 @@
 #include <fstream>
 #include <iostream>
 
-#include "statement.cpp"
-#include "numberStatement.cpp"
-#include "stringStatement.cpp"
+#include "statement.hpp"
+#include "numberStatement.hpp"
+#include "stringStatement.hpp"
 #include "boolStatement.hpp"
 #include "nullStatement.hpp"
 #include "arrayStatement.hpp"
-
-#include "utils.cpp"
+#include "keyValuePair.hpp"
 
 int main()
 {

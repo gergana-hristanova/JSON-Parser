@@ -9,7 +9,7 @@ Statement* BoolStatement::copy() const
     return new BoolStatement(value);
 }
 
-std::ostream& operator<<(std::ostream& os, const BoolStatement& bs)
+void BoolStatement::print(std::ostream& os) const
 {
-    return os << std::boolalpha << bs.value;
+    os << std::boolalpha << value;
 }

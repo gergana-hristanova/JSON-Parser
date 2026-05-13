@@ -21,7 +21,9 @@ KeyValuePair& KeyValuePair::operator=(KeyValuePair other)
 
 std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp)
 {
-    return os << kvp.key << ": " << kvp.value;
+    kvp.key.print(os);
+    kvp.value->print(os);
+    return os;
 }
 
 KeyValuePair::~KeyValuePair()

@@ -10,7 +10,7 @@ Statement* StringStatement::copy() const
     return new StringStatement(value);
 }
 
-std::ostream& operator<<(std::ostream& os, const StringStatement& ns)
+void StringStatement::print(std::ostream& os) const
 {
-    return os << '\"' << ns.value << '\"';
+    os << '\"' << value << '\"';
 }

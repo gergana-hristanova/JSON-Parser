@@ -20,3 +20,19 @@ Statement* ArrayStatement::copy() const
     
     return newArray;
 }
+
+void ArrayStatement::print(std::ostream& os) const
+{
+    os << "[";
+    for (size_t i = 0; i < array.size(); ++i)
+    {
+        if (i > 0)
+        {
+            os << ", ";
+        }
+
+        os << array[i];
+    }
+    
+    os << "]";
+}

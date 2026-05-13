@@ -1,5 +1,3 @@
-#include <string>
-
 struct Token
 {
     enum class TokenType
@@ -16,7 +14,9 @@ struct Token
         NUMBER,
         STRING,
         BOOLEAN,
-        _NULL
+        NULL,
+        ARRAY,
+        OBJECT
     };
 
     TokenType type;

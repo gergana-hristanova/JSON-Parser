@@ -9,7 +9,7 @@ Statement* NumberStatement::copy() const
     return new NumberStatement(value);
 }
 
-std::ostream& operator<<(std::ostream& os, const NumberStatement& ns)
+void NumberStatement::print(std::ostream& os) const
 {
-    return os << ns.value;
+    os << value;
 }

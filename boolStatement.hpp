@@ -2,15 +2,14 @@
 
 #include "statement.hpp"
 
-class BoolStatement : Statement
+class BoolStatement : public Statement
 {
 public:
     BoolStatement(bool boolean);
 
     Statement* copy() const override;
 
-    friend std::ostream& operator<<(std::ostream& os, const BoolStatement& bs);
-
+    void print(std::ostream& os) const override;
 
 private:
     bool value;

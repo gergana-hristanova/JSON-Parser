@@ -14,6 +14,8 @@ public:
 
     Statement* copy() const override;
 
+    void print(std::ostream& os) const override;
+
 private:
     std::vector<KeyValuePair> array;
 };

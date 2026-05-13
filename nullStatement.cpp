@@ -9,7 +9,7 @@ Statement* NullStatement::copy() const
     return new NullStatement();
 }
 
-std::ostream& operator<<(std::ostream& os, const NullStatement& ns)
+void NullStatement::print(std::ostream& os) const
 {
-    return os << "null";
+    os << "null";
 }
