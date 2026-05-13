@@ -2,14 +2,17 @@
 
 #include "statement.hpp"
 
-class NumberState : public Statement
+class NumberStatement : public Statement
 {
 public:
-    NumberState(double value);
+    NumberStatement(double value);
 
     Statement* copy() const override;
 
     operator std::string() const override;
 
-    friend std::ostream& operator<<(std::ostream& os, const NumberState& ns);
+    friend std::ostream& operator<<(std::ostream& os, const NumberStatement& ns);
+
+private:
+    double value;
 };

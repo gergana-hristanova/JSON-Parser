@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "statement.cpp"
 #include "numberStatement.cpp"
 
 #include "utils.cpp"

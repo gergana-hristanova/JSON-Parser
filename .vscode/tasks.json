@@ -6,6 +6,7 @@
             "command": "D:\\TDM-GCC\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                "-fsanitize=address",
                 "-g",
                 "${file}",
                 "-o",
