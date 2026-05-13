@@ -10,12 +10,14 @@ class ArrayStatement : public Statement
 public:
     ArrayStatement();
 
-    ArrayStatement& add(const KeyValuePair& kvp);
+    ArrayStatement& add(Statement* s);
 
     Statement* copy() const override;
 
     void print(std::ostream& os) const override;
 
+    ~ArrayStatement();
+
 private:
-    std::vector<KeyValuePair> array;
+    std::vector<Statement*> array;
 };

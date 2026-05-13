@@ -11,9 +11,10 @@
 
 int main()
 {
-    std::ifstream sourceFile("test.json");
-    std::ofstream destFile("dest.json");
+    ArrayStatement as = ArrayStatement();
+    as.add(new StringStatement("hello"));
+    as.add(new BoolStatement("false"));
+    as.add(new NullStatement());
 
-    sourceFile.close();
-    destFile.close();
+    as.print(std::cout);
 }

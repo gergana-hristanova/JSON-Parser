@@ -2,9 +2,9 @@
 
 ArrayStatement::ArrayStatement() : array() {}
 
-ArrayStatement& ArrayStatement::add(const KeyValuePair& kvp)
+ArrayStatement& ArrayStatement::add(Statement* s)
 {
-    array.push_back(kvp);
+    array.push_back(s);
 
     return *this;
 }
@@ -13,9 +13,9 @@ Statement* ArrayStatement::copy() const
 {
     ArrayStatement* newArray = new ArrayStatement();
 
-    for (const KeyValuePair& kvp : array)
+    for (Statement* s : array)
     {
-        newArray->add(kvp);
+        newArray->add(s);
     }
     
     return newArray;
@@ -31,8 +31,16 @@ void ArrayStatement::print(std::ostream& os) const
             os << ", ";
         }
 
-        os << array[i];
+        array[i]->print(os);
     }
     
     os << "]";
+}
+
+ArrayStatement::~ArrayStatement()
+{
+    for (Statement* s : array)
+    {
+        delete s;
+    }
 }
