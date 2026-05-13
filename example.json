@@ -1,13 +1,46 @@
 {
-  "Image": {
-    "Width":  800,
-    "Height": 600,
-    "Title":  "View from 15th Floor",
-    "Thumbnail": {
-      "Url":    "http://www.example.com/image/481989943",
-      "Height": 125,
-      "Width":  "100"
+  "validEdgeCases": {
+    "emptyValues": {
+      "emptyString": "",
+      "emptyObject": {},
+      "emptyArray": [],
+      "nullValue": null,
+      "zeroNumber": 0,
+      "falseBoolean": false
     },
-    "IDs": [ 116, 943, 234, 38793 ]
+    "nestedComplexity": {
+      "deeplyNested": {
+        "level1": {
+          "level2": {
+            "level3": [
+              {"item": 1},
+              {"item": 2}
+            ]
+          }
+        }
+      },
+      "mixedArray": [
+        "string",
+        123,
+        true,
+        null,
+        {"key": "value"},
+        [1, 2, 3]
+      ]
+    },
+    "specialStrings": {
+      "unicode": "Hello \u0041\u0042\u0043",
+      "escapedChars": "Tab:\t Newline:\n Quote:\"",
+      "keyWithDots": "value1",
+      "keyWithSpaces": "value2"
+    },
+    "numbers": {
+      "integer": 42,
+      "float": 3.14,
+      "negative": -10,
+      "scientific": 1.5e10,
+      "zero": 0,
+      "negativeZero": -0
+    }
   }
-}
+}   

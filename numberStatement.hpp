@@ -9,8 +9,6 @@ public:
 
     Statement* copy() const override;
 
-    operator std::string() const override;
-
     friend std::ostream& operator<<(std::ostream& os, const NumberStatement& ns);
 
 private:

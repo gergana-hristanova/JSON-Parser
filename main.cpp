@@ -3,6 +3,7 @@
 
 #include "statement.cpp"
 #include "numberStatement.cpp"
+#include "stringStatement.cpp"
 
 #include "utils.cpp"
 
@@ -11,9 +12,9 @@ int main()
     std::ifstream sourceFile("test.json");
     std::ofstream destFile("dest.json");
 
-    NumberStatement ns1 = NumberStatement(53);
+    StringStatement ss = StringStatement("Helo world");
 
-    destFile << ns1;
+    destFile << ss;
 
     sourceFile.close();
     destFile.close();
