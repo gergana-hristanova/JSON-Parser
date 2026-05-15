@@ -1,3 +1,5 @@
+#include "statement.hpp"
+
 struct Token
 {
     enum class TokenType
@@ -14,7 +16,7 @@ struct Token
         NUMBER,
         STRING,
         BOOLEAN,
-        NULL,
+        _NULL,
         ARRAY,
         OBJECT
     };
@@ -23,7 +25,8 @@ struct Token
 
     union
     {
+        Statement* statement;
         char symbol;
-        double number;
     } data;
+    
 };

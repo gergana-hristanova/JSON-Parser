@@ -1,7 +1,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "statement.hpp"
 #include "numberStatement.hpp"
 #include "stringStatement.hpp"
 #include "boolStatement.hpp"
@@ -9,6 +8,7 @@
 #include "arrayStatement.hpp"
 #include "objectStatement.hpp"
 #include "keyValuePair.hpp"
+#include "tokenizer.hpp"
 
 int main()
 {
