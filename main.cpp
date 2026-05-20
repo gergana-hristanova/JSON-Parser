@@ -8,7 +8,7 @@
 #include "arrayStatement.hpp"
 #include "objectStatement.hpp"
 #include "keyValuePair.hpp"
-#include "tokenizer.hpp"
+#include "token.hpp"
 
 int main()
 {
