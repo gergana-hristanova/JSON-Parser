@@ -23,17 +23,14 @@ Statement* ObjectStatement::copy() const
 
 void ObjectStatement::print(std::ostream& os) const
 {
-    os << "{ ";
-    for(std::size_t i = 0; i < properties.size(); ++i)
+    os << "[ " << properties[0];
+    for(std::size_t i = 1; i < properties.size(); ++i)
     {
-        if (i > 0)
-        {
-            os << ", ";
-        }
+        os << ", ";
 
         KeyValuePair kvp = properties[i];
         kvp.print(os);
     }
 
-    os << " }";
+    os << " ]";
 }

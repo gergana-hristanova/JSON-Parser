@@ -3,18 +3,17 @@
 #include <vector>
 
 #include "statement.hpp"
-#include "keyValuePair.hpp"
 
 class ArrayStatement : public Statement
 {
 public:
     ArrayStatement();
 
-    ArrayStatement& add(Statement* s);
+    ArrayStatement& add(Statement*);
 
     Statement* copy() const override;
 
-    void print(std::ostream& os) const override;
+    void print(std::ostream&) const override;
 
     ~ArrayStatement();
 

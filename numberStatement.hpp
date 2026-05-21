@@ -5,11 +5,11 @@
 class NumberStatement : public Statement
 {
 public:
-    NumberStatement(double value);
+    NumberStatement(double);
 
     Statement* copy() const override;
 
-    void print(std::ostream& os) const override;
+    void print(std::ostream&) const override;
 
 private:
     double value;

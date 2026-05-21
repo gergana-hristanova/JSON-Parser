@@ -9,5 +9,5 @@ public:
 
     Statement* copy() const override;
 
-    void print(std::ostream& os) const override;
+    void print(std::ostream&) const override;
 };

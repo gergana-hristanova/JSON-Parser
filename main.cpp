@@ -9,15 +9,15 @@
 #include "objectStatement.hpp"
 #include "keyValuePair.hpp"
 #include "token.hpp"
+#include "parser.hpp"
 
 int main()
 {
-    KeyValuePair kvp1 = KeyValuePair(StringStatement("name:"), new NullStatement());
-    KeyValuePair kvp2 = KeyValuePair(StringStatement("age:"), new NumberStatement(15));
-    KeyValuePair kvp3 = KeyValuePair(StringStatement("id:"), new StringStatement("A800"));
-    ObjectStatement os = ObjectStatement();
-    os.add(kvp1).add(kvp2).add(kvp3);
+    std::ifstream source("example.json");
 
-    os.print(std::cout);
+    Statement* JSON = Parser::parse(source);
+
+    std::cout << JSON << "---";
+
     return 0;
 }

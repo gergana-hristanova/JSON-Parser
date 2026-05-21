@@ -10,11 +10,11 @@ class ObjectStatement : public Statement
 public:
     ObjectStatement();
 
-    ObjectStatement& add(KeyValuePair kvp);
+    ObjectStatement& add(KeyValuePair);
 
     Statement* copy() const override;
 
-    void print(std::ostream& os) const override;
+    void print(std::ostream&) const override;
 
 private:
     std::vector<KeyValuePair> properties;

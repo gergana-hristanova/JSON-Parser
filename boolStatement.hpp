@@ -5,11 +5,11 @@
 class BoolStatement : public Statement
 {
 public:
-    BoolStatement(bool boolean);
+    BoolStatement(bool);
 
     Statement* copy() const override;
 
-    void print(std::ostream& os) const override;
+    void print(std::ostream&) const override;
 
 private:
     bool value;

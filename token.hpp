@@ -30,5 +30,9 @@ struct Token
         char symbol;
     } data;
 
-    static bool isWhitespace(char ch);
+    static bool isWhitespace(char);
+
+    static Token expect(std::istream&, Token::TokenType);
+
+    friend std::istream& operator>>(std::istream&, Token&);
 };

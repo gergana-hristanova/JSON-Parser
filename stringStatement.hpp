@@ -5,11 +5,11 @@
 class StringStatement : public Statement
 {
 public:
-    StringStatement(std::string value);
+    StringStatement(std::string);
 
     Statement* copy() const override;
 
-    void print(std::ostream& os) const override;
+    void print(std::ostream&) const override;
 
 private:
     std::string value;

@@ -23,18 +23,16 @@ Statement* ArrayStatement::copy() const
 
 void ArrayStatement::print(std::ostream& os) const
 {
-    os << "[ ";
+    os << "{ ";
+    array[0]->print(os);
     for (size_t i = 0; i < array.size(); ++i)
     {
-        if (i > 0)
-        {
-            os << ", ";
-        }
+        os << ", ";
 
         array[i]->print(os);
     }
     
-    os << " ]";
+    os << " }";
 }
 
 ArrayStatement::~ArrayStatement()

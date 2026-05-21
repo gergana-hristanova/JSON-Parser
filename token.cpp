@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "token.hpp"
-#include "stringStatement.hpp"
 #include "numberStatement.hpp"
+#include "stringStatement.hpp"
 #include "boolStatement.hpp"
 #include "nullStatement.hpp"
 
@@ -11,10 +11,24 @@ bool Token::isWhitespace(char ch)
     return ch <= 32;
 }
 
+Token Token::expect(std::istream& source, Token::TokenType type)
+{
+    Token expected;
+    source >> expected;
+
+    if (expected.type != type)
+    {
+        // TODO
+        throw "Different type expected.";
+    }
+
+    return expected;
+}
+
 // main tokenizing logic (lexer)
 std::istream& operator>>(std::istream& source, Token& token)
 {
-    // trim beginning of source
+    // trim source
     while (Token::isWhitespace(source.peek()))
     {
         source.get();
@@ -22,7 +36,15 @@ std::istream& operator>>(std::istream& source, Token& token)
 
     char current_symbol = source.peek();
 
-    if(current_symbol == '"')
+    if (std::isdigit(current_symbol))
+    {
+        double number;
+        source >> number;
+
+        token.type = Token::TokenType::NUMBER;
+        token.data.statement = new NumberStatement(number);
+    }
+    else if(current_symbol == '"')
     {
         source.get(); //ignore first "
         
@@ -33,14 +55,6 @@ std::istream& operator>>(std::istream& source, Token& token)
 
         token.type = Token::TokenType::STRING;
         token.data.statement = new StringStatement(str);
-    }
-    else if (std::isdigit(current_symbol))
-    {
-        double number;
-        source >> number;
-
-        token.type = Token::TokenType::NUMBER;
-        token.data.statement = new NumberStatement(number);
     }
     else if (current_symbol == 't')
     {
@@ -98,8 +112,8 @@ std::istream& operator>>(std::istream& source, Token& token)
                 token.type = Token::TokenType::COMMA;
                 break;
             default:
-                // TODO THROW
-                std::cerr << "ERROR! Invalid token";
+                // TODO
+                throw "Invalid token.";
         }
 
         token.data.symbol = current_symbol;

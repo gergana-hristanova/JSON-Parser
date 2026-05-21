@@ -8,14 +8,14 @@
 class KeyValuePair
 {
 public:
-    friend std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp);
-    KeyValuePair(StringStatement key, Statement* value);
+    friend std::ostream& operator<<(std::ostream&, const KeyValuePair&);
+    KeyValuePair(StringStatement, Statement*);
 
-    KeyValuePair(const KeyValuePair& other);
+    KeyValuePair(const KeyValuePair&);
 
-    KeyValuePair& operator=(KeyValuePair other);
+    KeyValuePair& operator=(KeyValuePair);
 
-    void print(std::ostream& os);
+    void print(std::ostream&);
 
     ~KeyValuePair();
 
@@ -23,5 +23,5 @@ private:
     StringStatement key; // will always be string due to JSON conventions
     Statement* value;
 
-    void swap(KeyValuePair& other);
+    void swap(KeyValuePair&);
 };
