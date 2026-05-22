@@ -7,10 +7,7 @@
 #include "key_value_pair.hpp"
 #include "string_statement.hpp"
 
-// neccesary forward declaration
-Statement* parse_from_token(std::istream& source, const Token& token);
-
-Statement* parse_object(std::istream& source)
+Statement* Parser::parse_object(std::istream& source)
 {
     ObjectStatement* object = new ObjectStatement();
 
@@ -47,13 +44,13 @@ Statement* parse_object(std::istream& source)
         }
         else
         {
-            throw std::runtime_error("Expected ',' or '}' in object.");
+            throw std::runtime_error("Expected ',' or '}' delimeter in object token.");
         }
     }
     return object;
 }
 
-Statement* parse_array(std::istream& source)
+Statement* Parser::parse_array(std::istream& source)
 {
     ArrayStatement* array = new ArrayStatement();
 
@@ -77,14 +74,14 @@ Statement* parse_array(std::istream& source)
         }
         else
         {
-            throw std::runtime_error("Expected ',' or ']' in array.");
+            throw std::runtime_error("Expected ',' or ']' delimeter in array token.");
         }
     }
 
     return array;
 }
 
-Statement* parse_from_token(std::istream& source, const Token& token)
+Statement* Parser::parse_from_token(std::istream& source, const Token& token)
 {
     switch (token.type)
     {
@@ -98,7 +95,7 @@ Statement* parse_from_token(std::istream& source, const Token& token)
         case Token::TokenType::LEFT_BRACKET:
             return parse_array(source);
         default:
-            throw std::runtime_error("Unexpected token while parsing value.");
+            throw std::runtime_error("Unexpected token.");
     }
 }
 

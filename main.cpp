@@ -14,7 +14,8 @@ int main()
             throw std::runtime_error("Failed to open file.");
         }
 
-        Statement* json = Parser::parse(source);
+        Parser p;
+        Statement* json = p.parse(source);
         json->pretty_print(std::cout);
         std::cout << '\n';
         delete json;
