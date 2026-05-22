@@ -1,7 +1,7 @@
 #include <string>
 #include <ostream>
 
-#include "stringStatement.hpp"
+#include "string_statement.hpp"
 
 StringStatement::StringStatement(std::string text) : value(text) {}
 
@@ -12,5 +12,10 @@ Statement* StringStatement::copy() const
 
 void StringStatement::print(std::ostream& os) const
 {
-    os << '\"' << value << '\"';
+    os << '"' << value << '"';
+}
+
+void StringStatement::pretty_print(std::ostream& os, unsigned, unsigned) const
+{
+    print(os);
 }

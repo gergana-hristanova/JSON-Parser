@@ -1,23 +1,29 @@
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
-#include "numberStatement.hpp"
-#include "stringStatement.hpp"
-#include "boolStatement.hpp"
-#include "nullStatement.hpp"
-#include "arrayStatement.hpp"
-#include "objectStatement.hpp"
-#include "keyValuePair.hpp"
-#include "token.hpp"
 #include "parser.hpp"
 
 int main()
 {
-    std::ifstream source("example.json");
+    try
+    {
+        std::ifstream source("example.json");
+        if (!source)
+        {
+            throw std::runtime_error("Failed to open file.");
+        }
 
-    Statement* JSON = Parser::parse(source);
+        Statement* json = Parser::parse(source);
+        json->pretty_print(std::cout);
+        std::cout << '\n';
+        delete json;
 
-    std::cout << JSON << "---";
-
-    return 0;
+        return 0;
+    }
+    catch (const std::exception& error)
+    {
+        std::cerr << "ERROR! " << error.what() << '\n';
+        return 1;
+    }
 }

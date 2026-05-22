@@ -1,7 +1,7 @@
 #include <utility>
 #include <stdexcept>
 
-#include "keyValuePair.hpp"
+#include "key_value_pair.hpp"
 
 KeyValuePair::KeyValuePair(StringStatement key, Statement* val)
     : key(key), value(val->copy())
@@ -32,6 +32,13 @@ std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp)
 void KeyValuePair::print(std::ostream& os)
 {
     os << *this;
+}
+
+void KeyValuePair::pretty_print(std::ostream& os, unsigned indent_spaces, unsigned current_indent)
+{
+    key.pretty_print(os, indent_spaces, current_indent);
+    os << ": ";
+    value->pretty_print(os, indent_spaces, current_indent);
 }
 
 KeyValuePair::~KeyValuePair()

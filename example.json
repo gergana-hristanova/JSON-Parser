@@ -29,7 +29,7 @@
       ]
     },
     "specialStrings": {
-      "unicode": "Hello \u0041\u0042\u0043",
+      "unicode": "Hello ABC",
       "escapedChars": "Tab:\t Newline:\n Quote:\"",
       "keyWithDots": "value1",
       "keyWithSpaces": "value2"

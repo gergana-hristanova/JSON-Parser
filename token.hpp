@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+
 #include "statement.hpp"
 
 struct Token
@@ -30,9 +32,15 @@ struct Token
         char symbol;
     } data;
 
-    static bool isWhitespace(char);
+    static bool is_whitespace(char);
+
+    void tokenize_keyword(std::istream&, const std::string&);
 
     static Token expect(std::istream&, Token::TokenType);
+
+    std::string tokenize_string(std::istream&);
+
+    double tokenize_number(std::istream&);
 
     friend std::istream& operator>>(std::istream&, Token&);
 };

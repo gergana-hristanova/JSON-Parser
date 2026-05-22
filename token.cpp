@@ -1,12 +1,14 @@
 #include <iostream>
+#include <string>
+#include <stdexcept>
 
 #include "token.hpp"
-#include "numberStatement.hpp"
-#include "stringStatement.hpp"
-#include "boolStatement.hpp"
-#include "nullStatement.hpp"
+#include "number_statement.hpp"
+#include "string_statement.hpp"
+#include "bool_statement.hpp"
+#include "null_statement.hpp"
 
-bool Token::isWhitespace(char ch)
+bool Token::is_whitespace(char ch)
 {
     return ch <= 32;
 }
@@ -18,73 +20,156 @@ Token Token::expect(std::istream& source, Token::TokenType type)
 
     if (expected.type != type)
     {
-        // TODO
-        throw "Different type expected.";
+        throw std::runtime_error("Different token type expected.");
     }
 
     return expected;
+}
+
+// for tokenizing true, false, and null
+void tokenize_keyword(std::istream& source, const std::string& expected)
+{
+    for (char ch : expected)
+    {
+        if (source.get() != ch)
+        {
+            throw std::runtime_error("Invalid literal token.");
+        }
+    }
+}
+
+std::string tokenize_string(std::istream& source)
+{
+    source.get(); // ignore opening quote
+
+    if (!source)
+    {
+        throw std::runtime_error("Invalid termination in string token.");
+    }
+
+    std::string result;
+    int next = source.get();
+
+    while (source && next != '"')
+    {
+        // escaping logic
+        if (next == '\\')
+        {
+            int escaped = source.get();
+            if (!source)
+            {
+                throw std::runtime_error("Invalid termination in string token.");
+            }
+
+            char esc = escaped;
+            switch (esc)
+            {
+                case '"':
+                    result.push_back('"');
+                    break;
+                case '\\':
+                    result.push_back('\\');
+                    break;
+                case '/':
+                    result.push_back('/');
+                    break;
+                case 'b':
+                    result.push_back('\b');
+                    break;
+                case 'f':
+                    result.push_back('\f');
+                    break;
+                case 'n':
+                    result.push_back('\n');
+                    break;
+                case 'r':
+                    result.push_back('\r');
+                    break;
+                case 't':
+                    result.push_back('\t');
+                    break;
+                default:
+                    throw std::runtime_error("Invalid escape in string token.");
+            }
+        }
+        else
+        {
+            result.push_back(next);
+        }
+
+        next = source.get();
+    }
+
+    if (next != '"')
+    {
+        throw std::runtime_error("Invalid end of string token.");
+    }
+
+    return result;
+}
+
+double tokenize_number(std::istream& source)
+{
+    double number = 0.0;
+    source >> number;
+
+    if (!source)
+    {
+        throw std::runtime_error("Invalid number token.");
+    }
+
+    return number;
 }
 
 // main tokenizing logic (lexer)
 std::istream& operator>>(std::istream& source, Token& token)
 {
     // trim source
-    while (Token::isWhitespace(source.peek()))
+    int next = source.peek();
+    while (source && Token::is_whitespace(static_cast<char>(next)))
     {
         source.get();
+        next = source.peek();
     }
 
-    char current_symbol = source.peek();
-
-    if (std::isdigit(current_symbol))
+    if (!source)
     {
-        double number;
-        source >> number;
+        throw std::runtime_error("Empty input.");
+    }
+
+    char current_symbol = next;
+
+    if (current_symbol == '-' || std::isdigit(current_symbol))
+    {
+        double number = tokenize_number(source);
 
         token.type = Token::TokenType::NUMBER;
         token.data.statement = new NumberStatement(number);
     }
     else if(current_symbol == '"')
     {
-        source.get(); //ignore first "
-        
-        std::string str;
-        std::getline(source, str, '"');
-
-        source.get(); //ignore second "
+        std::string str = tokenize_string(source);
 
         token.type = Token::TokenType::STRING;
         token.data.statement = new StringStatement(str);
     }
     else if (current_symbol == 't')
     {
-        // skip the word true
-        source.get();
-        source.get();
-        source.get();
-        source.get();
+        tokenize_keyword(source, "true");
 
         token.type = Token::TokenType::BOOLEAN;
         token.data.statement = new BoolStatement(true);
     }
     else if (current_symbol == 'f')
     {
-        // skip the word false
-        source.get();
-        source.get();
-        source.get();
-        source.get();
-        source.get();
+        tokenize_keyword(source, "false");
 
         token.type = Token::TokenType::BOOLEAN;
         token.data.statement = new BoolStatement(false);
     }
-        else if (current_symbol == 'n')
+    else if (current_symbol == 'n')
     {
-        // skip the word null
-        source.get();
-        source.get();
-        source.get();
+        tokenize_keyword(source, "null");
 
         token.type = Token::TokenType::_NULL;
         token.data.statement = new NullStatement();
@@ -112,10 +197,10 @@ std::istream& operator>>(std::istream& source, Token& token)
                 token.type = Token::TokenType::COMMA;
                 break;
             default:
-                // TODO
-                throw "Invalid token.";
+                throw std::runtime_error("Invalid symbol token.");
         }
 
+        source.get();
         token.data.symbol = current_symbol;
     }
 

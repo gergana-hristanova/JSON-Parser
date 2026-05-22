@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "nullStatement.hpp"
+#include "null_statement.hpp"
 
 NullStatement::NullStatement() {}
 
@@ -12,4 +12,9 @@ Statement* NullStatement::copy() const
 void NullStatement::print(std::ostream& os) const
 {
     os << "null";
+}
+
+void NullStatement::pretty_print(std::ostream& os, unsigned, unsigned) const
+{
+    print(os);
 }
