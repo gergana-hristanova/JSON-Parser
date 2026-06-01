@@ -13,47 +13,59 @@ Statement* Parser::parse_object(std::istream& source)
 
     Token token;
     source >> token;
-    while (token.type != Token::TokenType::RIGHT_BRACE)
+    try
     {
-        if (token.type != Token::TokenType::STRING)
+        while (token.type != Token::TokenType::RIGHT_BRACE)
         {
-            throw std::runtime_error("Key in object key-value pairs must be string.");
-        }
+            if (token.type != Token::TokenType::STRING)
+            {
+                throw std::runtime_error("Key in object key-value pairs must be string.");
+            }
 
-        StringStatement* key_statement = dynamic_cast<StringStatement*>(token.data.statement);
-        if (key_statement == nullptr)
-        {
-            delete token.data.statement;
-            throw std::runtime_error("Key in object key-value pairs must be string.");
-        }
+            if (token.type != Token::TokenType::STRING)
+            {
+                delete token.data.statement;
+                throw std::runtime_error("Key in object key-value pairs must be string.");
+            }
 
-        StringStatement key = *key_statement;
+            StringStatement* key_statement = dynamic_cast<StringStatement*>(token.data.statement);
+            if (key_statement == nullptr)
+            {
+                delete token.data.statement;
+                throw std::runtime_error("Key in object key-value pairs must be string.");
+            }
 
-        delete token.data.statement;
+            StringStatement key = *key_statement;
 
-        Token::expect(source, Token::TokenType::COLON);
-        Token value_token;
+            Token::expect(source, Token::TokenType::COLON);
+            Token value_token;
 
-        source >> value_token;
-        Statement* value = parse_from_token(source, value_token);
-        object->add(KeyValuePair(key, value));
+            source >> value_token;
+            Statement* value = parse_from_token(source, value_token);
+            object->add(KeyValuePair(key, value));
 
-        Token separator;
-        source >> separator;
-        
-        if (separator.type == Token::TokenType::RIGHT_BRACE)
-        {
-            token = separator;
-        }
-        else if (separator.type == Token::TokenType::COMMA)
-        {
-            source >> token;
-        }
-        else
-        {
-            throw std::runtime_error("Expected ',' or '}' delimeter in object token.");
+            Token separator;
+            source >> separator;
+            
+            if (separator.type == Token::TokenType::RIGHT_BRACE)
+            {
+                token = separator;
+            }
+            else if (separator.type == Token::TokenType::COMMA)
+            {
+                source >> token;
+            }
+            else
+            {
+                throw std::runtime_error("Expected ',' or '}' delimeter in object token.");
+            }
         }
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << "PARSER ERROR:" << e.what() << '\n';
+    }
+
     return object;
 }
 

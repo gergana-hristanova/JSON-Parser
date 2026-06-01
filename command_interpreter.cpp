@@ -677,19 +677,19 @@ bool CommandInterpreter::open_file(const std::string& path, std::ostream& err)
         if (has_trailing_data(input))
         {
             delete parsed;
-            err << "Файлът съдържа допълнителни данни след валиден JSON обект." << '\n';
+            err << "File has trailing data" << '\n';
             return false;
         }
 
         delete root;
         root = parsed;
         current_file = path;
-        err << "Отворен файл: " << path << '\n';
+        err << "Opened file " << path << '.\n';
         return true;
     }
     catch (const std::exception& exception)
     {
-        err << "Грешка при отваряне на файла: " << exception.what() << '\n';
+        err << "FILE ERROR: " << exception.what() << '\n';
         return false;
     }
 }
