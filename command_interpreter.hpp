@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iosfwd>
 #include <string>
 
 class CommandInterpreter
