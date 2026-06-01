@@ -5,6 +5,12 @@
 
 #include "statement.hpp"
 
+void tokenize_keyword(std::istream&, const std::string&);
+
+std::string tokenize_string(std::istream&);
+
+double tokenize_number(std::istream&);
+
 struct Token
 {
     enum class TokenType
@@ -34,13 +40,7 @@ struct Token
 
     static bool is_whitespace(char);
 
-    void tokenize_keyword(std::istream&, const std::string&);
-
     static Token expect(std::istream&, Token::TokenType);
-
-    std::string tokenize_string(std::istream&);
-
-    double tokenize_number(std::istream&);
 
     friend std::istream& operator>>(std::istream&, Token&);
 };

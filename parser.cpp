@@ -20,7 +20,14 @@ Statement* Parser::parse_object(std::istream& source)
             throw std::runtime_error("Key in object key-value pairs must be string.");
         }
 
-        StringStatement key = *static_cast<StringStatement*>(token.data.statement);
+        StringStatement* key_statement = dynamic_cast<StringStatement*>(token.data.statement);
+        if (key_statement == nullptr)
+        {
+            delete token.data.statement;
+            throw std::runtime_error("Key in object key-value pairs must be string.");
+        }
+
+        StringStatement key = *key_statement;
 
         delete token.data.statement;
 

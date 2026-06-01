@@ -2,10 +2,23 @@
 
 #include <ostream>
 
+class ObjectStatement;
+class ArrayStatement;
+
 class Statement
 {
 public:
     virtual Statement* copy() const = 0; // virtual copy constructor
+
+    virtual ObjectStatement* as_object();
+
+    virtual const ObjectStatement* as_object() const;
+
+    virtual ArrayStatement* as_array();
+
+    virtual const ArrayStatement* as_array() const;
+
+    virtual bool is_container() const;
 
     // deprecated
     virtual void print(std::ostream&) const;

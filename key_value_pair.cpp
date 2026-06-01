@@ -21,6 +21,34 @@ KeyValuePair& KeyValuePair::operator=(KeyValuePair other)
     return *this;
 }
 
+const StringStatement& KeyValuePair::get_key() const
+{
+    return key;
+}
+
+Statement* KeyValuePair::get_value()
+{
+    return value;
+}
+
+const Statement* KeyValuePair::get_value() const
+{
+    return value;
+}
+
+Statement* KeyValuePair::release_value()
+{
+    Statement* released = value;
+    value = nullptr;
+    return released;
+}
+
+void KeyValuePair::set_value(Statement* new_value)
+{
+    delete value;
+    value = new_value;
+}
+
 std::ostream& operator<<(std::ostream& os, const KeyValuePair& kvp)
 {
     kvp.key.print(os);

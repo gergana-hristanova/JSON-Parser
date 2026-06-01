@@ -1,30 +1,15 @@
-#include <fstream>
 #include <iostream>
-#include <stdexcept>
 
-#include "parser.hpp"
+#include "command_interpreter.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
-    try
-    {
-        std::ifstream source("example.json");
-        if (!source)
-        {
-            throw std::runtime_error("Failed to open file.");
-        }
+    CommandInterpreter interpreter;
 
-        Parser p;
-        Statement* json = p.parse(source);
-        json->pretty_print(std::cout);
-        std::cout << '\n';
-        delete json;
-
-        return 0;
-    }
-    catch (const std::exception& error)
+    if (argc > 1)
     {
-        std::cerr << "ERROR! " << error.what() << '\n';
-        return 1;
+        interpreter.open_file(argv[1], std::cerr);
     }
+
+    return interpreter.run(std::cin, std::cout, std::cerr);
 }

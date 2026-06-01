@@ -1,4 +1,5 @@
 #include "object_statement.hpp"
+#include <string>
 
 ObjectStatement::ObjectStatement() : properties() {}
 
@@ -7,6 +8,71 @@ ObjectStatement& ObjectStatement::add(KeyValuePair kvp)
     properties.push_back(kvp);
 
     return *this;
+}
+
+ObjectStatement* ObjectStatement::as_object()
+{
+    return this;
+}
+
+const ObjectStatement* ObjectStatement::as_object() const
+{
+    return this;
+}
+
+bool ObjectStatement::is_container() const
+{
+    return true;
+}
+
+const std::vector<KeyValuePair>& ObjectStatement::get_properties() const
+{
+    return properties;
+}
+
+std::vector<KeyValuePair>& ObjectStatement::get_properties()
+{
+    return properties;
+}
+
+KeyValuePair* ObjectStatement::find(const std::string& key)
+{
+    for (KeyValuePair& property : properties)
+    {
+        if (property.get_key().get_value() == key)
+        {
+            return &property;
+        }
+    }
+
+    return nullptr;
+}
+
+const KeyValuePair* ObjectStatement::find(const std::string& key) const
+{
+    for (const KeyValuePair& property : properties)
+    {
+        if (property.get_key().get_value() == key)
+        {
+            return &property;
+        }
+    }
+
+    return nullptr;
+}
+
+bool ObjectStatement::erase(const std::string& key)
+{
+    for (auto it = properties.begin(); it != properties.end(); ++it)
+    {
+        if (it->get_key().get_value() == key)
+        {
+            properties.erase(it);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 Statement* ObjectStatement::copy() const

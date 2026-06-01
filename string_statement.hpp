@@ -9,6 +9,8 @@ class StringStatement : public Statement
 public:
     StringStatement(std::string);
 
+    const std::string& get_value() const;
+
     Statement* copy() const override;
 
     void print(std::ostream&) const override;

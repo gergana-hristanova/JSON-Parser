@@ -5,6 +5,11 @@
 
 StringStatement::StringStatement(std::string text) : value(text) {}
 
+const std::string& StringStatement::get_value() const
+{
+    return value;
+}
+
 Statement* StringStatement::copy() const
 {
     return new StringStatement(value);

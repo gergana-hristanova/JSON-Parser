@@ -9,6 +9,65 @@ ArrayStatement& ArrayStatement::add(Statement* s)
     return *this;
 }
 
+ArrayStatement* ArrayStatement::as_array()
+{
+    return this;
+}
+
+const ArrayStatement* ArrayStatement::as_array() const
+{
+    return this;
+}
+
+bool ArrayStatement::is_container() const
+{
+    return true;
+}
+
+const std::vector<Statement*>& ArrayStatement::get_elements() const
+{
+    return array;
+}
+
+std::vector<Statement*>& ArrayStatement::get_elements()
+{
+    return array;
+}
+
+Statement* ArrayStatement::at(std::size_t index)
+{
+    return array.at(index);
+}
+
+const Statement* ArrayStatement::at(std::size_t index) const
+{
+    return array.at(index);
+}
+
+Statement* ArrayStatement::release(std::size_t index)
+{
+    Statement* released = array.at(index);
+    array.erase(array.begin() + index);
+    return released;
+}
+
+void ArrayStatement::set(std::size_t index, Statement* value)
+{
+    delete array.at(index);
+    array.at(index) = value;
+}
+
+void ArrayStatement::insert(std::size_t index, Statement* value)
+{
+    array.insert(array.begin() + index, value);
+}
+
+void ArrayStatement::erase(std::size_t index)
+{
+    delete array.at(index);
+    array.erase(array.begin() + index);
+}
+
 Statement* ArrayStatement::copy() const
 {
     ArrayStatement* new_array = new ArrayStatement();

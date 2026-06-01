@@ -11,6 +11,28 @@ public:
 
     ArrayStatement& add(Statement*);
 
+    const std::vector<Statement*>& get_elements() const;
+
+    std::vector<Statement*>& get_elements();
+
+    ArrayStatement* as_array() override;
+
+    const ArrayStatement* as_array() const override;
+
+    bool is_container() const override;
+
+    Statement* at(std::size_t index);
+
+    const Statement* at(std::size_t index) const;
+
+    Statement* release(std::size_t index);
+
+    void set(std::size_t index, Statement*);
+
+    void insert(std::size_t index, Statement*);
+
+    void erase(std::size_t index);
+
     Statement* copy() const override;
 
     void print(std::ostream&) const override;

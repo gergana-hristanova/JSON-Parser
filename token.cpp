@@ -126,7 +126,7 @@ std::istream& operator>>(std::istream& source, Token& token)
 {
     // trim source
     int next = source.peek();
-    while (source && Token::is_whitespace(static_cast<char>(next)))
+    while (source && Token::is_whitespace(next))
     {
         source.get();
         next = source.peek();
