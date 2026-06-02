@@ -106,11 +106,6 @@ Troubleshooting
 
 If parsing fails with a message about invalid tokens, check that the JSON file is syntactically valid (matching braces/brackets, properly quoted strings).
 
-Contributing
-------------
-
-Contributions are welcome. When proposing changes, prefer small incremental pull requests that include tests. If you add features that change ownership semantics, include migration notes and compile-time checks to prevent accidental leaks.
-
 License
 -------
 
@@ -120,5 +115,3 @@ Contact and further notes
 -------------------------
 
 This project is for educational purposes. To contact, go to https://linktr.ee/gergana.hristanova.
-
-# JSON-Parser
