@@ -91,11 +91,35 @@ The shell is synchronous and single-document: it keeps one `root` in memory. Con
 Building and running
 --------------------
 
-The code is platform portable and builds with any standards-compliant C++17 compiler. A typical build invocation using g++ from the project root is:
+The code is platform portable and builds with any standards-compliant C++17 compiler. Below are explicit commands for compiling and running the project and its tests from the project root.
+
+Compiling
+---------
+
+- Compile the main program:
 
 ```
 g++ -std=c++17 -O2 -Wall -Wextra -pedantic *.cpp -o main
+```
 
+- Compile the test executable (builds the test runner alongside sources):
+
+```
+g++ -std=c++17 -O2 -Wall -Wextra -pedantic tests.cpp *.cpp -o tests
+```
+
+Testing
+-------
+
+- Run the unit tests:
+
+```
+./tests
+```
+
+- Or run the interactive program:
+
+```
 ./main
 ```
 
