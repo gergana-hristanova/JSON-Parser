@@ -667,7 +667,7 @@ bool CommandInterpreter::open_file(const std::string& path, std::ostream& err)
     std::ifstream input(path.c_str());
     if (!input)
     {
-        err << "Неуспешно отваряне на файл: " << path << '\n';
+        err << "Unable to open file: " << path << '\n';
         return false;
     }
 
@@ -684,7 +684,8 @@ bool CommandInterpreter::open_file(const std::string& path, std::ostream& err)
         delete root;
         root = parsed;
         current_file = path;
-        err << "Opened file " << path << '.\n';
+        err << "Opened file " << path << ".\n";
+
         return true;
     }
     catch (const std::exception& exception)
@@ -948,11 +949,12 @@ int CommandInterpreter::run(std::istream& in, std::ostream& out, std::ostream& e
                 {
                     delete_path(root, to_path, error_message);
                     err << error_message << '\n';
+                    delete moved;
                     continue;
                 }
 
                 delete moved;
-                out << "ОК" << '\n';
+                out << "Success!" << '\n';
                 continue;
             }
 
@@ -960,7 +962,7 @@ int CommandInterpreter::run(std::istream& in, std::ostream& out, std::ostream& e
             {
                 if (root == nullptr)
                 {
-                    err << "Няма зареден JSON документ." << '\n';
+                    err << "No JSON document is loaded!" << '\n';
                     continue;
                 }
 
@@ -977,7 +979,7 @@ int CommandInterpreter::run(std::istream& in, std::ostream& out, std::ostream& e
 
                 if (file_path.empty())
                 {
-                    err << "Липсва файл за запис." << '\n';
+                    err << "Missing file path." << '\n';
                     continue;
                 }
 
@@ -988,14 +990,14 @@ int CommandInterpreter::run(std::istream& in, std::ostream& out, std::ostream& e
                     target = find_node(root, path);
                     if (target == nullptr)
                     {
-                        err << "Пътят не съществува." << '\n';
+                        err << "Path does not exist." << '\n';
                         continue;
                     }
                 }
 
                 save_statement_to_file(target, file_path);
                 current_file = file_path;
-                out << "Записано във файл: " << file_path << '\n';
+                out << "Saved to file: " << file_path << '\n';
                 continue;
             }
 

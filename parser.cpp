@@ -12,41 +12,53 @@ Statement* Parser::parse_object(std::istream& source)
     ObjectStatement* object = new ObjectStatement();
 
     Token token;
-    source >> token;
+    Token separator;
+
+    auto cleanup_token_statement = [](const Token& t){
+        switch (t.type)
+        {
+            case Token::TokenType::NUMBER:
+            case Token::TokenType::STRING:
+            case Token::TokenType::BOOLEAN:
+            case Token::TokenType::_NULL:
+                delete t.data.statement;
+                break;
+            default:
+                break;
+        }
+    };
+
     try
     {
+        source >> token;
+
         while (token.type != Token::TokenType::RIGHT_BRACE)
         {
             if (token.type != Token::TokenType::STRING)
             {
-                throw std::runtime_error("Key in object key-value pairs must be string.");
-            }
-
-            if (token.type != Token::TokenType::STRING)
-            {
-                delete token.data.statement;
+                cleanup_token_statement(token);
                 throw std::runtime_error("Key in object key-value pairs must be string.");
             }
 
             StringStatement* key_statement = dynamic_cast<StringStatement*>(token.data.statement);
             if (key_statement == nullptr)
             {
-                delete token.data.statement;
+                cleanup_token_statement(token);
                 throw std::runtime_error("Key in object key-value pairs must be string.");
             }
 
             StringStatement key = *key_statement;
+            // we've copied the key; free the temporary StringStatement allocated by the tokenizer
+            cleanup_token_statement(token);
 
             Token::expect(source, Token::TokenType::COLON);
-            Token value_token;
 
+            Token value_token;
             source >> value_token;
             Statement* value = parse_from_token(source, value_token);
             object->add(KeyValuePair(key, value));
 
-            Token separator;
             source >> separator;
-            
             if (separator.type == Token::TokenType::RIGHT_BRACE)
             {
                 token = separator;
@@ -57,13 +69,18 @@ Statement* Parser::parse_object(std::istream& source)
             }
             else
             {
+                cleanup_token_statement(separator);
                 throw std::runtime_error("Expected ',' or '}' delimeter in object token.");
             }
         }
     }
-    catch(const std::exception& e)
+    catch (...)
     {
-        std::cerr << "PARSER ERROR:" << e.what() << '\n';
+        // clean up any statements still owned by last-read tokens
+        cleanup_token_statement(token);
+        cleanup_token_statement(separator);
+        delete object;
+        throw;
     }
 
     return object;
@@ -74,27 +91,53 @@ Statement* Parser::parse_array(std::istream& source)
     ArrayStatement* array = new ArrayStatement();
 
     Token token;
-    source >> token;
+    Token separator;
 
-    while (token.type != Token::TokenType::RIGHT_BRACKET)
+    auto cleanup_token_statement = [](const Token& t){
+        switch (t.type)
         {
-        Statement* value = parse_from_token(source, token);
-        array->add(value);
+            case Token::TokenType::NUMBER:
+            case Token::TokenType::STRING:
+            case Token::TokenType::BOOLEAN:
+            case Token::TokenType::_NULL:
+                delete t.data.statement;
+                break;
+            default:
+                break;
+        }
+    };
 
-        Token separator;
-        source >> separator;
-        if (separator.type == Token::TokenType::RIGHT_BRACKET)
+    try
+    {
+        source >> token;
+
+        while (token.type != Token::TokenType::RIGHT_BRACKET)
         {
-            token = separator;
+            Statement* value = parse_from_token(source, token);
+            array->add(value);
+
+            source >> separator;
+            if (separator.type == Token::TokenType::RIGHT_BRACKET)
+            {
+                token = separator;
+            }
+            else if (separator.type == Token::TokenType::COMMA)
+            {
+                source >> token;
+            }
+            else
+            {
+                cleanup_token_statement(separator);
+                throw std::runtime_error("Expected ',' or ']' delimeter in array token.");
+            }
         }
-        else if (separator.type == Token::TokenType::COMMA)
-        {
-            source >> token;
-        }
-        else
-        {
-            throw std::runtime_error("Expected ',' or ']' delimeter in array token.");
-        }
+    }
+    catch (...)
+    {
+        cleanup_token_statement(token);
+        cleanup_token_statement(separator);
+        delete array;
+        throw;
     }
 
     return array;
@@ -122,5 +165,26 @@ Statement* Parser::parse(std::istream& source)
 {
     Token token;
     source >> token;
-    return parse_from_token(source, token);
+
+    try
+    {
+        return parse_from_token(source, token);
+    }
+    catch (...)
+    {
+        // if parse_from_token throws, and the token held a Statement, free it
+        switch (token.type)
+        {
+            case Token::TokenType::NUMBER:
+            case Token::TokenType::STRING:
+            case Token::TokenType::BOOLEAN:
+            case Token::TokenType::_NULL:
+                delete token.data.statement;
+                break;
+            default:
+                break;
+        }
+
+        throw;
+    }
 }

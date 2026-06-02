@@ -20,6 +20,18 @@ Token Token::expect(std::istream& source, Token::TokenType type)
 
     if (expected.type != type)
     {
+        switch (expected.type)
+        {
+            case Token::TokenType::NUMBER:
+            case Token::TokenType::STRING:
+            case Token::TokenType::BOOLEAN:
+            case Token::TokenType::_NULL:
+                delete expected.data.statement;
+                break;
+            default:
+                break;
+        }
+
         throw std::runtime_error("Different token type expected.");
     }
 
@@ -197,7 +209,7 @@ std::istream& operator>>(std::istream& source, Token& token)
                 token.type = Token::TokenType::COMMA;
                 break;
             default:
-                throw std::runtime_error("Invalid symbol token.");
+                throw std::runtime_error("Invalid symbol token. Make sure JSON file is valid.");
         }
 
         source.get();
