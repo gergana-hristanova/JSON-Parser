@@ -38,6 +38,10 @@ struct Token
         char symbol;
     } data;
 
+    // 1-based position of the token's first character in the input stream
+    int line = 1;
+    int column = 1;
+
     static bool is_whitespace(char);
 
     static Token expect(std::istream&, Token::TokenType);

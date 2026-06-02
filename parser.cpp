@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <sstream>
 
 #include "parser.hpp"
 #include "token.hpp"
@@ -37,14 +38,18 @@ Statement* Parser::parse_object(std::istream& source)
             if (token.type != Token::TokenType::STRING)
             {
                 cleanup_token_statement(token);
-                throw std::runtime_error("Key in object key-value pairs must be string.");
+                std::ostringstream ss;
+                ss << "Key in object key-value pairs must be string at line " << token.line << " col " << token.column << ".";
+                throw std::runtime_error(ss.str());
             }
 
             StringStatement* key_statement = dynamic_cast<StringStatement*>(token.data.statement);
             if (key_statement == nullptr)
             {
                 cleanup_token_statement(token);
-                throw std::runtime_error("Key in object key-value pairs must be string.");
+                std::ostringstream ss;
+                ss << "Key in object key-value pairs must be string at line " << token.line << " col " << token.column << ".";
+                throw std::runtime_error(ss.str());
             }
 
             StringStatement key = *key_statement;
@@ -70,7 +75,9 @@ Statement* Parser::parse_object(std::istream& source)
             else
             {
                 cleanup_token_statement(separator);
-                throw std::runtime_error("Expected ',' or '}' delimeter in object token.");
+                std::ostringstream ss;
+                ss << "Expected ',' or '}' delimiter in object token at line " << separator.line << " col " << separator.column << ".";
+                throw std::runtime_error(ss.str());
             }
         }
     }
@@ -128,7 +135,9 @@ Statement* Parser::parse_array(std::istream& source)
             else
             {
                 cleanup_token_statement(separator);
-                throw std::runtime_error("Expected ',' or ']' delimeter in array token.");
+                std::ostringstream ss;
+                ss << "Expected ',' or ']' delimiter in array token at line " << separator.line << " col " << separator.column << ".";
+                throw std::runtime_error(ss.str());
             }
         }
     }
@@ -157,7 +166,11 @@ Statement* Parser::parse_from_token(std::istream& source, const Token& token)
         case Token::TokenType::LEFT_BRACKET:
             return parse_array(source);
         default:
-            throw std::runtime_error("Unexpected token.");
+        {
+            std::ostringstream ss;
+            ss << "Unexpected token at line " << token.line << " col " << token.column << ".";
+            throw std::runtime_error(ss.str());
+        }
     }
 }
 

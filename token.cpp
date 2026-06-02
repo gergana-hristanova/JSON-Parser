@@ -8,6 +8,8 @@
 #include "bool_statement.hpp"
 #include "null_statement.hpp"
 
+#include <sstream>
+
 bool Token::is_whitespace(char ch)
 {
     return ch <= 32;
@@ -32,7 +34,9 @@ Token Token::expect(std::istream& source, Token::TokenType type)
                 break;
         }
 
-        throw std::runtime_error("Different token type expected.");
+        std::ostringstream ss;
+        ss << "Different token type expected at line " << expected.line << " col " << expected.column << ".";
+        throw std::runtime_error(ss.str());
     }
 
     return expected;
@@ -41,22 +45,58 @@ Token Token::expect(std::istream& source, Token::TokenType type)
 // for tokenizing true, false, and null
 void tokenize_keyword(std::istream& source, const std::string& expected)
 {
+    // compute position for better error messages
+    auto get_pos = [&source]() {
+        std::istream::pos_type cur = source.tellg();
+        if (cur == (std::istream::pos_type)-1) return std::pair<int,int>(1,1);
+        source.clear();
+        source.seekg(0);
+        int line = 1;
+        int col = 1;
+        char ch;
+        while (source && source.tellg() < cur && source.get(ch))
+        {
+            if (ch == '\n') { ++line; col = 1; }
+            else { ++col; }
+        }
+        source.clear();
+        source.seekg(cur);
+        return std::pair<int,int>(line, col);
+    };
+
     for (char ch : expected)
     {
         if (source.get() != ch)
         {
-            throw std::runtime_error("Invalid literal token.");
+            auto pos = get_pos();
+            std::ostringstream ss;
+            ss << "Invalid literal token at line " << pos.first << " col " << pos.second << ".";
+            throw std::runtime_error(ss.str());
         }
     }
 }
 
 std::string tokenize_string(std::istream& source)
 {
+    // compute opening position for error messages
+    std::istream::pos_type start_pos = source.tellg();
     source.get(); // ignore opening quote
 
     if (!source)
     {
-        throw std::runtime_error("Invalid termination in string token.");
+        std::pair<int,int> pos(1,1);
+        if (start_pos != (std::istream::pos_type)-1)
+        {
+            source.clear(); source.seekg(0);
+            int line = 1, col = 1; char ch;
+            while (source && source.tellg() < start_pos && source.get(ch)) { if (ch=='\n'){++line; col=1;} else ++col; }
+            pos = {line, col};
+            source.clear(); source.seekg(start_pos);
+        }
+
+        std::ostringstream ss;
+        ss << "Invalid termination in string token at line " << pos.first << " col " << pos.second << ".";
+        throw std::runtime_error(ss.str());
     }
 
     std::string result;
@@ -70,7 +110,21 @@ std::string tokenize_string(std::istream& source)
             int escaped = source.get();
             if (!source)
             {
-                throw std::runtime_error("Invalid termination in string token.");
+                // error at escape sequence start
+                std::pair<int,int> pos(1,1);
+                std::istream::pos_type cur = source.tellg();
+                if (cur != (std::istream::pos_type)-1)
+                {
+                    source.clear(); source.seekg(0);
+                    int line = 1, col = 1; char ch;
+                    while (source && source.tellg() < cur && source.get(ch)) { if (ch=='\n'){++line; col=1;} else ++col; }
+                    pos = {line, col};
+                    source.clear(); source.seekg(cur);
+                }
+
+                std::ostringstream ss;
+                ss << "Invalid termination in string token at line " << pos.first << " col " << pos.second << ".";
+                throw std::runtime_error(ss.str());
             }
 
             char esc = escaped;
@@ -101,7 +155,22 @@ std::string tokenize_string(std::istream& source)
                     result.push_back('\t');
                     break;
                 default:
-                    throw std::runtime_error("Invalid escape in string token.");
+                {
+                    std::pair<int,int> pos(1,1);
+                    std::istream::pos_type cur = source.tellg();
+                    if (cur != (std::istream::pos_type)-1)
+                    {
+                        source.clear(); source.seekg(0);
+                        int line = 1, col = 1; char ch;
+                        while (source && source.tellg() < cur && source.get(ch)) { if (ch=='\n'){++line; col=1;} else ++col; }
+                        pos = {line, col};
+                        source.clear(); source.seekg(cur);
+                    }
+
+                    std::ostringstream ss;
+                    ss << "Invalid escape in string token at line " << pos.first << " col " << pos.second << ".";
+                    throw std::runtime_error(ss.str());
+                }
             }
         }
         else
@@ -114,7 +183,20 @@ std::string tokenize_string(std::istream& source)
 
     if (next != '"')
     {
-        throw std::runtime_error("Invalid end of string token.");
+        std::pair<int,int> pos(1,1);
+        std::istream::pos_type cur = source.tellg();
+        if (cur != (std::istream::pos_type)-1)
+        {
+            source.clear(); source.seekg(0);
+            int line = 1, col = 1; char ch;
+            while (source && source.tellg() < cur && source.get(ch)) { if (ch=='\n'){++line; col=1;} else ++col; }
+            pos = {line, col};
+            source.clear(); source.seekg(cur);
+        }
+
+        std::ostringstream ss;
+        ss << "Invalid end of string token at line " << pos.first << " col " << pos.second << ".";
+        throw std::runtime_error(ss.str());
     }
 
     return result;
@@ -127,7 +209,21 @@ double tokenize_number(std::istream& source)
 
     if (!source)
     {
-        throw std::runtime_error("Invalid number token.");
+        // compute approximate position
+        std::pair<int,int> pos(1,1);
+        std::istream::pos_type cur = source.tellg();
+        if (cur != (std::istream::pos_type)-1)
+        {
+            source.clear(); source.seekg(0);
+            int line = 1, col = 1; char ch;
+            while (source && source.tellg() < cur && source.get(ch)) { if (ch=='\n'){++line; col=1;} else ++col; }
+            pos = {line, col};
+            source.clear(); source.seekg(cur);
+        }
+
+        std::ostringstream ss;
+        ss << "Invalid number token at line " << pos.first << " col " << pos.second << ".";
+        throw std::runtime_error(ss.str());
     }
 
     return number;
@@ -149,7 +245,30 @@ std::istream& operator>>(std::istream& source, Token& token)
         throw std::runtime_error("Empty input.");
     }
 
+    // compute current line/column for the token start
+    auto get_pos = [&source]() {
+        std::istream::pos_type cur = source.tellg();
+        if (cur == (std::istream::pos_type)-1) return std::pair<int,int>(1,1);
+        source.clear();
+        source.seekg(0);
+        int line = 1;
+        int col = 1;
+        char ch;
+        while (source && source.tellg() < cur && source.get(ch))
+        {
+            if (ch == '\n') { ++line; col = 1; }
+            else { ++col; }
+        }
+        source.clear();
+        source.seekg(cur);
+        return std::pair<int,int>(line, col);
+    };
+
+    auto pos = get_pos();
+
     char current_symbol = next;
+    token.line = pos.first;
+    token.column = pos.second;
 
     if (current_symbol == '-' || std::isdigit(current_symbol))
     {
@@ -209,7 +328,11 @@ std::istream& operator>>(std::istream& source, Token& token)
                 token.type = Token::TokenType::COMMA;
                 break;
             default:
-                throw std::runtime_error("Invalid symbol token. Make sure JSON file is valid.");
+            {
+                std::ostringstream ss;
+                ss << "Invalid symbol token at line " << token.line << " col " << token.column << ". Make sure JSON file is valid.";
+                throw std::runtime_error(ss.str());
+            }
         }
 
         source.get();
